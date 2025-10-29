@@ -13,7 +13,7 @@ This project demonstrates end-to-end data engineering capabilities by building a
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Data Sources                              │
+│                    Data Sources                             │
 │  • Orders (JSON) - Every 15 minutes                         │
 │  • Products (CSV) - Daily updates                           │
 │  • Customers (CSV) - Daily updates                          │
@@ -22,34 +22,34 @@ This project demonstrates end-to-end data engineering capabilities by building a
                      ▼
 ┌─────────────────────────────────────────────────────────────┐
 │              Cloud Storage (GCS)                            │
-│  Landing Zone → Staging → Archive                          │
+│  Landing Zone → Staging → Archive                           │
 └────────────────────┬────────────────────────────────────────┘
                      │
                      ▼
 ┌─────────────────────────────────────────────────────────────┐
 │          Cloud Composer (Apache Airflow)                    │
-│  • Incremental Pipeline (15 min)                           │
-│  • Daily Batch Jobs                                        │
-│  • Data Quality Checks                                     │
+│  • Incremental Pipeline (15 min)                            │
+│  • Daily Batch Jobs                                         │
+│  • Data Quality Checks                                      │
 └────────────────────┬────────────────────────────────────────┘
                      │
                      ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                  BigQuery Data Warehouse                    │
 │                                                             │
-│  Staging Layer:                                            │
-│  ├── staging_orders                                        │
-│  ├── staging_products                                      │
-│  └── staging_customers                                     │
+│  Staging Layer:                                             │
+│  ├── staging_orders                                         │
+│  ├── staging_products                                       │
+│  └── staging_customers                                      │
 │                                                             │
-│  Core Layer (Star Schema):                                 │
-│  ├── fact_orders (Fact Table)                             │
-│  ├── dim_products (Dimension)                             │
-│  ├── dim_customers (Dimension)                            │
-│  └── agg_hourly_metrics (Aggregation)                     │
+│  Core Layer (Star Schema):                                  │
+│  ├── fact_orders (Fact Table)                               │
+│  ├── dim_products (Dimension)                               │
+│  ├── dim_customers (Dimension)                              │
+│  └── agg_hourly_metrics (Aggregation)                       │
 │                                                             │
-│  Data Quality Layer:                                       │
-│  └── data_quality_checks                                   │
+│  Data Quality Layer:                                        │
+│  └── data_quality_checks                                    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -151,7 +151,7 @@ All quality issues logged to `data_quality_checks` table with severity levels.
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/yourusername/ecommerce-data-pipeline.git
+git clone https://github.com/zackkki/ecomm_datapipeline.git
 cd ecommerce-data-pipeline
 ```
 
@@ -172,7 +172,7 @@ gsutil mkdir gs://${PROJECT_ID}-data-pipeline/landing/customers
 gsutil mkdir gs://${PROJECT_ID}-data-pipeline/archive
 
 # Create BigQuery dataset
-bq mk --location=us-central1 ecommerce_data
+bq mk --location=asia-southeast1 ecommerce_data
 ```
 
 ### 3. Create BigQuery Tables
@@ -187,14 +187,12 @@ bq query --use_legacy_sql=false < sql/create_tables.sql
 ```bash
 # Create Composer environment
 gcloud composer environments create ecommerce-pipeline \
-    --location us-central1 \
-    --machine-type n1-standard-2 \
-    --python-version 3 \
-    --node-count 3
+    --location asia-southeast1 \
+    --image-version composer-3-airflow-2.10.5 \
 
 # Get DAGs folder
 export DAGS_FOLDER=$(gcloud composer environments describe ecommerce-pipeline \
-    --location us-central1 \
+    --location asia-southeast1 \
     --format="get(config.dagGcsPrefix)")
 ```
 
@@ -206,7 +204,7 @@ gsutil cp dags/*.py $DAGS_FOLDER/
 
 # Grant permissions to Composer service account
 export COMPOSER_SA=$(gcloud composer environments describe ecommerce-pipeline \
-    --location us-central1 \
+    --location asia-southeast1 \
     --format="get(config.nodeConfig.serviceAccount)")
 
 gsutil iam ch serviceAccount:${COMPOSER_SA}:objectAdmin \
@@ -235,7 +233,7 @@ gsutil cp data/customers_sample.csv \
 1. Access Airflow UI:
 ```bash
 gcloud composer environments describe ecommerce-pipeline \
-    --location us-central1 \
+    --location asia-southeast1 \
     --format="get(config.airflowUri)"
 ```
 
@@ -248,7 +246,7 @@ gcloud composer environments describe ecommerce-pipeline \
 ## 📁 Project Structure
 
 ```
-ecommerce-data-pipeline/
+ecommerce-datapipeline/
 ├── dags/
 │   ├── order_processing_incremental.py    # 15-min incremental pipeline
 │   └── daily_batch_processing.py          # Daily batch jobs
@@ -263,34 +261,8 @@ ecommerce-data-pipeline/
 │   ├── generate_orders.py                 # Sample data generator
 │   ├── generate_products.py
 │   └── generate_customers.py
-├── tests/
-│   ├── test_data_quality.py
-│   └── test_transformations.py
-├── docs/
-│   ├── architecture.md
-│   └── data_dictionary.md
-├── requirements.txt
 └── README.md
-```
 
-## 🧪 Testing
-
-### Unit Tests
-```bash
-pytest tests/test_transformations.py
-```
-
-### Integration Tests
-```bash
-# Test full pipeline with sample data
-python scripts/run_integration_test.py
-```
-
-### Data Quality Tests
-```bash
-# Run data quality checks
-bq query --use_legacy_sql=false < tests/test_data_quality.sql
-```
 
 ## 📊 Monitoring & Observability
 
@@ -335,17 +307,6 @@ bq query --use_legacy_sql=false < tests/test_data_quality.sql
 ## 📝 License
 
 MIT License - feel free to use this project for learning and portfolio purposes.
-
-## 🤝 Contributing
-
-This is a portfolio project, but feedback and suggestions are welcome! Open an issue or submit a PR.
-
-## 👤 Author
-
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- Portfolio: [yourwebsite.com](https://yourwebsite.com)
 
 ## 🙏 Acknowledgments
 
