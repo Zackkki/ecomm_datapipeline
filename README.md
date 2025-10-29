@@ -147,7 +147,7 @@ All quality issues logged to `data_quality_checks` table with severity levels.
 ### Prerequisites
 - GCP Account with billing enabled
 - `gcloud` CLI installed and configured
-- Python 3.8+
+- Python 3.12
 
 ### 1. Clone Repository
 ```bash
