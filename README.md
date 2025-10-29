@@ -248,15 +248,8 @@ gcloud composer environments describe ecommerce-pipeline \
 ```
 ecommerce-datapipeline/
 ├── dags/
-│   ├── order_processing_incremental.py    # 15-min incremental pipeline
-│   └── daily_batch_processing.py          # Daily batch jobs
-├── sql/
-│   ├── create_tables.sql                  # Table DDL statements
-│   ├── transform_to_fact.sql              # Main transformation query
-│   └── reports/
-│       ├── inactive_customers.sql
-│       ├── low_stock_alerts.sql
-│       └── revenue_trends.sql
+│   └── order_processing_incremental.py    # 15-min incremental pipeline
+│   
 ├── scripts/
 │   ├── generate_orders.py                 # Sample data generator
 │   ├── generate_products.py
