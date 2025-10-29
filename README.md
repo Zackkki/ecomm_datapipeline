@@ -256,7 +256,7 @@ ecommerce-datapipeline/
 │   ├── generate_products.py
 │   └── generate_customers.py
 └── README.md
-
+```
 
 ## 📊 Monitoring & Observability
 
