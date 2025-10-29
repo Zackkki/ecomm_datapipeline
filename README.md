@@ -146,12 +146,13 @@ All quality issues logged to `data_quality_checks` table with severity levels.
 
 ### Prerequisites
 - GCP Account with billing enabled
+- GCP Project (Project ID and bucket is needed)
 - `gcloud` CLI installed and configured
 - Python 3.12
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/zackkki/ecomm_datapipeline.git
+git clone https://github.com/zackkki/ecommerce_data-pipeline.git
 cd ecommerce-data-pipeline
 ```
 
